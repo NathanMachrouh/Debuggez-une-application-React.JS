@@ -13,7 +13,11 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const {last} = useData()
+  const { data } = useData() // Vérifier si data est défini, sinon last sera undefined
+  const last = data?.events.sort((evtA, evtB) =>
+    new Date(evtB.date) - new Date(evtA.date) // Trier les événements par date, en plaçant les plus récents en premier
+  )[0]; // Récupérer le premier élément du tableau trié, qui est le dernier événement.
+  
   return <>
     <header>
       <Menu />
@@ -116,13 +120,20 @@ const Page = () => {
     <footer className="row">
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
-        <EventCard
-          imageSrc={last?.cover}
-          title={last?.title}
-          date={new Date(last?.date)}
-          small
-          label="boom"
-        />
+        {/*
+            Utilisation de " last && " comme vérification pour s'assurer que last existe 
+            avant d'utiliser à ses propriétés. Cela empêchera l'erreur liée à la valeur undefined.
+        */}
+        {last && (
+          <EventCard
+            imageSrc={last.cover}
+            title={last.title}
+            date={new Date(last.date)}
+            small
+            label={last.type}
+          />
+        )}
+
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>

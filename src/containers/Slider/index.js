@@ -8,11 +8,19 @@ const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+    /* 
+      Changement de l'opérateur logique pour trier dans le bon sens les images
+      De la plus récente à la plus ancienne (ordre décroissant)
+    */
+    new Date(evtA.date) < new Date(evtB.date) ? 1 : -1
   );
   const nextCard = () => {
     setTimeout(
-      () => setIndex(index < byDateDesc.length ? index + 1 : 0),
+      /*
+        Suppression de l'élément "undefined" en ajoutant +1 à index
+        Ajout de "?" pour vérifier que byDateDesc existe
+      */
+      () => setIndex(index < (byDateDesc ? byDateDesc.length - 1 : 0) ? index + 1 : 0),
       5000
     );
   };
@@ -21,15 +29,16 @@ const Slider = () => {
   });
   return (
     <div className="SlideCardList">
+      {/* Suppresion des <></> qui encapsulait 2 éléments différents */}
       {byDateDesc?.map((event, idx) => (
-        <>
+        // Changement de la key pour qu'elle soit unique pour chaque slide
+        <div key={event.title}>
           <div
-            key={event.title}
-            className={`SlideCard SlideCard--${
-              index === idx ? "display" : "hide"
-            }`}
+            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"
+              }`}
           >
-            <img src={event.cover} alt="forum" />
+            {/* Attribut alt modifié pour avoir les renseignements correspondants à l'image */}
+            <img src={event.cover} alt={event.title} />
             <div className="SlideCard__descriptionContainer">
               <div className="SlideCard__description">
                 <h3>{event.title}</h3>
@@ -42,15 +51,17 @@ const Slider = () => {
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
-                  key={`${event.id}`}
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`slider-${radioIdx}`}
                   type="radio"
                   name="radio-button"
-                  checked={idx === radioIdx}
+                  checked={index === radioIdx} // Remplacement de idx par index pour indiquer sur quelle image on se trouve
+                  readOnly // Ajout de readOnly pour retirer erreur console, met les boutons radio en lecture seul
                 />
               ))}
             </div>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
