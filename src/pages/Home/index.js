@@ -13,11 +13,8 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { data } = useData() // Vérifier si data est défini, sinon last sera undefined
-  const last = data?.events.sort((evtA, evtB) =>
-    new Date(evtB.date) - new Date(evtA.date) // Trier les événements par date, en plaçant les plus récents en premier
-  )[0]; // Récupérer le premier élément du tableau trié, qui est le dernier événement.
-  
+  const { last } = useData()
+
   return <>
     <header>
       <Menu />
