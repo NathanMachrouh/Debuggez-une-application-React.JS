@@ -31,7 +31,6 @@ const Slider = () => {
     <div className="SlideCardList">
       {/* Suppresion des <></> qui encapsulait 2 éléments différents */}
       {byDateDesc?.map((event, idx) => (
-        // Changement de la key pour qu'elle soit unique pour chaque slide
         <div key={event.title}>
           <div
             className={`SlideCard SlideCard--${index === idx ? "display" : "hide"
